@@ -1,8 +1,8 @@
-# Python
+# Python cache
 __pycache__/
 *.py[cod]
 
-# Virtual environments
+# Virtual environment
 .venv/
 
 # VS Code
@@ -11,5 +11,8 @@ __pycache__/
 # Windows
 Thumbs.db
 
-# Generated output
+# Generated files
 output/
+
+# OpenCV test images
+*.tmp
