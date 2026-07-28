@@ -1,8 +1,16 @@
-import cv2
+def detect_blob(measurements):
 
+    area = measurements["area"]
+    height = measurements["height"]
+    count = measurements["count"]
 
-def run():
-    print("=" * 40)
-    print("NozzleVision")
-    print("OpenCV Version:", cv2.__version__)
-    print("=" * 40)
+    if area > 20:
+        return True
+
+    if height > 30:
+        return True
+
+    if count > 20:
+        return True
+
+    return False
