@@ -4,37 +4,25 @@ import cv2
 
 from nozzlevision.vision import preprocess
 from nozzlevision.detector import detect_blob
-from nozzlevision.camera import capture
+from nozzlevision.engine import inspect
+import sys
+
 def analyze_live():
 
-    print("=" * 70)
-    print("LIVE CAMERA")
-    print("=" * 70)
+    result = inspect()
 
-    frame = capture()
+    if result["status"] == "error":
+        print(result["message"])
+        sys.exit(2)
 
-    if frame is None:
-        print("Cannot capture image")
-        return
+    print(result["measurements"])
 
-    pipeline = preprocess(frame)
-
-    measurements = pipeline["measurements"]
-
-    print(measurements)
-
-    detected = detect_blob(measurements)
-
-    import sys
-
-    detected = detect_blob(measurements)
-
-    if detected:
+    if result["status"] == "blob":
         print("STATUS=BLOB")
         sys.exit(1)
-    else:
-        print("STATUS=CLEAN")
-        sys.exit(0)
+
+    print("STATUS=CLEAN")
+    sys.exit(0)
 
 
 stats = {
