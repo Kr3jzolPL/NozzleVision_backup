@@ -1,4 +1,5 @@
 import os
+import sys
 import cv2
 
 from nozzlevision.vision import preprocess
@@ -24,10 +25,16 @@ def analyze_live():
 
     detected = detect_blob(measurements)
 
+    import sys
+
+    detected = detect_blob(measurements)
+
     if detected:
-        print("❌ BLOB DETECTED")
+        print("STATUS=BLOB")
+        sys.exit(1)
     else:
-        print("✅ CLEAN")
+        print("STATUS=CLEAN")
+        sys.exit(0)
 
 
 stats = {
