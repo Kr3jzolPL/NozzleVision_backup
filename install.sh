@@ -28,9 +28,63 @@ source venv/bin/activate
 pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 
-echo ""
-echo "Installation completed."
-echo ""
-echo "Run with:"
-echo "~/NozzleVision/run.sh"
 chmod +x install.sh update.sh run.sh uninstall.sh
+
+############################################################
+# Install Klipper configuration
+############################################################
+
+echo "Installing Klipper configuration..."
+
+cp moonraker/nozzlevision.cfg \
+    "$HOME/printer_data/config/nozzlevision.cfg"
+
+PRINTER_CFG="$HOME/printer_data/config/printer.cfg"
+
+if ! grep -qF "[include nozzlevision.cfg]" "$PRINTER_CFG"; then
+    echo "" >> "$PRINTER_CFG"
+    echo "[include nozzlevision.cfg]" >> "$PRINTER_CFG"
+    echo "Added [include nozzlevision.cfg] to printer.cfg"
+else
+    echo "printer.cfg already includes nozzlevision.cfg"
+fi
+
+############################################################
+# Install systemd service
+############################################################
+
+echo "Installing NozzleVision API service..."
+
+sudo cp moonraker/nozzlevision.service \
+    /etc/systemd/system/nozzlevision.service
+
+sudo systemctl daemon-reload
+sudo systemctl enable nozzlevision
+sudo systemctl restart nozzlevision
+
+############################################################
+# Finished
+############################################################
+
+echo ""
+echo "========================================"
+echo " NozzleVision installed successfully!"
+echo "========================================"
+echo ""
+echo "✔ Python environment created"
+echo "✔ Dependencies installed"
+echo "✔ Klipper configuration copied"
+echo "✔ printer.cfg updated"
+echo "✔ NozzleVision API installed"
+echo "✔ API service started"
+echo ""
+echo "Please run a 'Firmware Restart' in Klipper."
+echo ""
+echo "Manual start:"
+echo "    ~/NozzleVision/run.sh"
+echo ""
+echo "API:"
+echo "Restarting Moonraker..."
+
+sudo systemctl restart moonraker || true
+echo "    http://$(hostname -I | awk '{print $1}'):5050/check"
