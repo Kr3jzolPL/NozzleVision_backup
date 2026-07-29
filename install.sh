@@ -34,6 +34,3 @@ echo ""
 echo "Run with:"
 echo "~/NozzleVision/run.sh"
 chmod +x install.sh update.sh run.sh uninstall.sh
-git add install.sh update.sh run.sh uninstall.sh
-git commit -m "Make shell scripts executable"
-git push
