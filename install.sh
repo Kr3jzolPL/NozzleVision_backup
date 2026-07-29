@@ -33,3 +33,4 @@ echo "Installation completed."
 echo ""
 echo "Run with:"
 echo "~/NozzleVision/run.sh"
+chmod +x run.sh
