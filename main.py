@@ -11,13 +11,11 @@ def analyze_live():
 
     result = inspect()
 
-    if result["status"] == "error":
-        print(result["message"])
+    if result.get("error"):
+        print(result["error"])
         sys.exit(2)
 
-    print(result["measurements"])
-
-    if result["status"] == "blob":
+    if result["blob"]:
         print("STATUS=BLOB")
         sys.exit(1)
 
