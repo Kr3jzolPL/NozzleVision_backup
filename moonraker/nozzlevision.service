@@ -3,10 +3,12 @@ Description=NozzleVision API
 After=network.target
 
 [Service]
+Type=simple
 User=pi
 WorkingDirectory=/home/pi/NozzleVision
-ExecStart=/home/pi/NozzleVision/.venv/bin/python -m nozzlevision.server
+ExecStart=/home/pi/NozzleVision/venv/bin/python -m nozzlevision.server
 Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
