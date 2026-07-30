@@ -18,7 +18,7 @@ try:
         json={
             "script": f"SET_GCODE_VARIABLE MACRO=NOZZLE_AUTO VARIABLE=blob VALUE={value}"
         },
-        timeout=2,
+        timeout=10,
     )
 
     print("BLOB" if blob else "CLEAN")
