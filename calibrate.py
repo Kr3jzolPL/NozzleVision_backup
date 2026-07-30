@@ -66,6 +66,13 @@ while True:
     elif key == "p":
         save(cfg)
         print("ROI saved.")
+        continue
 
     elif key == "q":
         break
+
+    else:
+        continue
+
+    # Auto-save after every movement/resizing
+    save(cfg)
