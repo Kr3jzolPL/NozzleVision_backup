@@ -1,4 +1,7 @@
 import json
+import sys
+import termios
+import tty
 
 CONFIG = "config.json"
 STEP = 5
@@ -12,6 +15,19 @@ def load():
 def save(cfg):
     with open(CONFIG, "w") as f:
         json.dump(cfg, f, indent=4)
+
+
+def get_key():
+    fd = sys.stdin.fileno()
+    old = termios.tcgetattr(fd)
+
+    try:
+        tty.setraw(fd)
+        key = sys.stdin.read(1)
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old)
+
+    return key.lower()
 
 
 cfg = load()
@@ -31,13 +47,15 @@ print("")
 while True:
 
     print(
-        f"X:{roi['x']}  "
+        f"\rX:{roi['x']}  "
         f"Y:{roi['y']}  "
         f"W:{roi['width']}  "
-        f"H:{roi['height']}"
+        f"H:{roi['height']}      ",
+        end="",
+        flush=True,
     )
 
-    key = input("> ").strip().lower()
+    key = get_key()
 
     if key == "w":
         roi["y"] -= STEP
@@ -65,14 +83,13 @@ while True:
 
     elif key == "p":
         save(cfg)
-        print("ROI saved.")
-        continue
+        print("\nROI saved.")
 
     elif key == "q":
+        print()
         break
 
     else:
         continue
 
-    # Auto-save after every movement/resizing
     save(cfg)
