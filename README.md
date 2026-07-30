@@ -117,7 +117,7 @@ Example:
 ## How it Works
 
 1. Move the nozzle to the inspection position 
-2. Manually validate your Inspect X Y Z coordinates when you are happy (make sure to have no or little things that can reflect light in that area.
+2. Manually validate your Inspect X Y Z coordinates when you are happy insert them in config (make sure to have no or little things that can reflect light in that area.
 3. Capture an image from the camera.
 4. Crop the configured ROI around tip of nozzle.
 5. Detect filament blobs using OpenCV.
