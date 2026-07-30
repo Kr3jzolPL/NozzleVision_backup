@@ -1,0 +1,19 @@
+{
+  "inspect_x": 68,
+  "inspect_y": 343,
+  "inspect_z": 18,
+
+  "camera_url": "http://127.0.0.1/webcam/?action=snapshot",
+
+  "roi": {
+    "x": 560,
+    "y": 120,
+    "width": 180,
+    "height": 140
+  },
+
+  "threshold": 45,
+  "min_blob_area": 120,
+  "max_blob_area": 5000,
+  "max_attempts": 3
+}
