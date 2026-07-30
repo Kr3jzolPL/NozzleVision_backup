@@ -2,11 +2,13 @@ from flask import Flask, Response
 from nozzlevision.engine import inspect
 from nozzlevision.camera import capture
 
+from pathlib import Path
 import json
 import cv2
 
 app = Flask(__name__)
 
+CONFIG = Path(__file__).resolve().parent.parent / "config.json"
 
 @app.route("/check", methods=["GET", "POST"])
 def check():
