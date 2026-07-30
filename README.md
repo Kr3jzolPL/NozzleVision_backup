@@ -26,7 +26,7 @@ NozzleVision uses a camera to inspect the printer nozzle before printing. If a f
 Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/NozzleVision.git
+git clone https://github.com/Kr3jzolPL/NozzleVision.git
 cd NozzleVision
 ```
 
