@@ -1,80 +1,78 @@
+from flask import Flask, Response
+from nozzlevision.engine import inspect
+from nozzlevision.camera import capture
+
+from pathlib import Path
 import json
+import cv2
 
-CONFIG = "config.json"
-STEP = 5
+app = Flask(__name__)
+
+CONFIG = Path(__file__).resolve().parent.parent / "config.json"
 
 
-def load():
+@app.route("/check", methods=["GET", "POST"])
+def check():
+    return inspect()
+
+
+@app.route("/calibration")
+def calibration():
+
+    return """
+    <html>
+    <body style="background:#111;text-align:center;">
+        <img id="frame" src="/calibration_frame">
+
+        <script>
+        setInterval(() => {
+            document.getElementById("frame").src =
+                "/calibration_frame?t=" + Date.now();
+        }, 200);
+        </script>
+    </body>
+    </html>
+    """
+
+
+@app.route("/calibration_frame")
+def calibration_frame():
+
     with open(CONFIG, "r") as f:
-        return json.load(f)
+        config = json.load(f)
 
+    roi = config["roi"]
 
-def save(cfg):
-    with open(CONFIG, "w") as f:
-        json.dump(cfg, f, indent=4)
+    frame = capture()
 
+    if frame is None:
+        return "Camera unavailable", 500
 
-cfg = load()
-roi = cfg["roi"]
-
-print("==============================")
-print(" NozzleVision ROI Calibration")
-print("==============================")
-print("")
-print("W A S D : Move ROI")
-print("I K     : Height +/-")
-print("J L     : Width +/-")
-print("Q       : Quit")
-print("")
-
-while True:
-
-    print(
-        f"X:{roi['x']}  "
-        f"Y:{roi['y']}  "
-        f"W:{roi['width']}  "
-        f"H:{roi['height']}"
+    cv2.rectangle(
+        frame,
+        (roi["x"], roi["y"]),
+        (
+            roi["x"] + roi["width"],
+            roi["y"] + roi["height"]
+        ),
+        (0, 255, 0),
+        2
     )
 
-    key = input("> ").lower()
+    success, buffer = cv2.imencode(".jpg", frame)
 
-    changed = False
+    if not success:
+        return "Failed to encode image", 500
 
-    if key == "w":
-        roi["y"] -= STEP
-        changed = True
+    return Response(
+        buffer.tobytes(),
+        mimetype="image/jpeg"
+    )
 
-    elif key == "s":
-        roi["y"] += STEP
-        changed = True
 
-    elif key == "a":
-        roi["x"] -= STEP
-        changed = True
-
-    elif key == "d":
-        roi["x"] += STEP
-        changed = True
-
-    elif key == "i":
-        roi["height"] += STEP
-        changed = True
-
-    elif key == "k":
-        roi["height"] = max(10, roi["height"] - STEP)
-        changed = True
-
-    elif key == "l":
-        roi["width"] += STEP
-        changed = True
-
-    elif key == "j":
-        roi["width"] = max(10, roi["width"] - STEP)
-        changed = True
-
-    elif key == "q":
-        print("Calibration finished.")
-        break
-
-    if changed:
-        save(cfg)
+if __name__ == "__main__":
+    app.run(
+        host="0.0.0.0",
+        port=5050,
+        debug=False
+    )
