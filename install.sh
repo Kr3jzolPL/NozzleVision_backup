@@ -43,9 +43,17 @@ PRINTER_CFG="$HOME/printer_data/config/printer.cfg"
 
 if ! grep -qF "[include nozzlevision.cfg]" "$PRINTER_CFG"; then
     if grep -q "^#\*#" "$PRINTER_CFG"; then
-        sed -i '/^#\*#/i\
-[include nozzlevision.cfg]\
-' "$PRINTER_CFG"
+        awk '
+        !inserted && /^#\*#/ {
+            print "[include nozzlevision.cfg]"
+            print ""
+            inserted=1
+        }
+        { print }
+        ' "$PRINTER_CFG" > "$PRINTER_CFG.tmp"
+
+        mv "$PRINTER_CFG.tmp" "$PRINTER_CFG"
+
         echo "Inserted [include nozzlevision.cfg] before SAVE_CONFIG block"
     else
         echo "" >> "$PRINTER_CFG"
