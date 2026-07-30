@@ -1,22 +1,28 @@
+import json
 import cv2
+import numpy as np
+import requests
+from pathlib import Path
 
-CAMERA_URL = "http://192.168.1.117:8080/?action=snapshot"
+# Load configuration
+CONFIG = Path(__file__).resolve().parent.parent / "config.json"
+
+with open(CONFIG, "r") as f:
+    config = json.load(f)
+
+CAMERA_URL = config["camera_url"]
 
 
 def capture():
+    try:
+        response = requests.get(CAMERA_URL, timeout=5)
+        response.raise_for_status()
 
-    frame = cv2.imread(CAMERA_URL)
+        data = np.frombuffer(response.content, dtype=np.uint8)
+        frame = cv2.imdecode(data, cv2.IMREAD_COLOR)
 
-    if frame is not None:
         return frame
 
-    cap = cv2.VideoCapture(CAMERA_URL)
-
-    ok, frame = cap.read()
-
-    cap.release()
-
-    if not ok:
+    except Exception as e:
+        print(f"Camera error: {e}")
         return None
-
-    return frame
