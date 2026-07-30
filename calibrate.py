@@ -1,7 +1,6 @@
 import json
 
 CONFIG = "config.json"
-
 STEP = 5
 
 
@@ -25,7 +24,6 @@ print("")
 print("W A S D : Move ROI")
 print("I K     : Height +/-")
 print("J L     : Width +/-")
-print("P       : Save")
 print("Q       : Quit")
 print("")
 
@@ -40,33 +38,43 @@ while True:
 
     key = input("> ").lower()
 
+    changed = False
+
     if key == "w":
         roi["y"] -= STEP
+        changed = True
 
     elif key == "s":
         roi["y"] += STEP
+        changed = True
 
     elif key == "a":
         roi["x"] -= STEP
+        changed = True
 
     elif key == "d":
         roi["x"] += STEP
+        changed = True
 
     elif key == "i":
         roi["height"] += STEP
+        changed = True
 
     elif key == "k":
         roi["height"] = max(10, roi["height"] - STEP)
+        changed = True
 
     elif key == "l":
         roi["width"] += STEP
+        changed = True
 
     elif key == "j":
         roi["width"] = max(10, roi["width"] - STEP)
-
-    elif key == "p":
-        save(cfg)
-        print("ROI saved.")
+        changed = True
 
     elif key == "q":
+        print("Calibration finished.")
         break
+
+    if changed:
+        save(cfg)
