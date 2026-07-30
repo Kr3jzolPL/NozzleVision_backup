@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 CONFIG = Path(__file__).resolve().parent.parent / "config.json"
 
+
 @app.route("/check", methods=["GET", "POST"])
 def check():
     return inspect()
@@ -18,7 +19,29 @@ def check():
 @app.route("/calibration")
 def calibration():
 
-    with open("config.json", "r") as f:
+    return """
+<!DOCTYPE html>
+<html>
+<body style="background:#111;text-align:center;">
+
+<img id="frame" src="/calibration_frame">
+
+<script>
+setInterval(function(){
+    document.getElementById("frame").src =
+        "/calibration_frame?t=" + Date.now();
+}, 200);
+</script>
+
+</body>
+</html>
+"""
+
+
+@app.route("/calibration_frame")
+def calibration_frame():
+
+    with open(CONFIG, "r") as f:
         config = json.load(f)
 
     roi = config["roi"]
