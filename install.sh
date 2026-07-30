@@ -42,9 +42,16 @@ cp moonraker/nozzlevision.cfg \
 PRINTER_CFG="$HOME/printer_data/config/printer.cfg"
 
 if ! grep -qF "[include nozzlevision.cfg]" "$PRINTER_CFG"; then
-    echo "" >> "$PRINTER_CFG"
-    echo "[include nozzlevision.cfg]" >> "$PRINTER_CFG"
-    echo "Added [include nozzlevision.cfg] to printer.cfg"
+    if grep -q "^#\*#" "$PRINTER_CFG"; then
+        sed -i '/^#\*#/i\
+[include nozzlevision.cfg]\
+' "$PRINTER_CFG"
+        echo "Inserted [include nozzlevision.cfg] before SAVE_CONFIG block"
+    else
+        echo "" >> "$PRINTER_CFG"
+        echo "[include nozzlevision.cfg]" >> "$PRINTER_CFG"
+        echo "Added [include nozzlevision.cfg] to end of printer.cfg"
+    fi
 else
     echo "printer.cfg already includes nozzlevision.cfg"
 fi
