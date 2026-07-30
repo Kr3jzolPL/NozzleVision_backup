@@ -92,9 +92,9 @@ Example:
 
 ```json
 {
-    "inspect_x": 68,
-    "inspect_y": 343,
-    "inspect_z": 18,
+    "inspect_x": 68, #Pos X 
+    "inspect_y": 343, #Pos Y 
+    "inspect_z": 18, # Pos Z
 
     "camera_url": "http://127.0.0.1/webcam/?action=snapshot",
 
@@ -116,14 +116,15 @@ Example:
 
 ## How it Works
 
-1. Move the nozzle to the inspection position.
-2. Capture an image from the camera.
-3. Crop the configured ROI.
-4. Detect filament blobs using OpenCV.
-5. If a blob is detected:
+1. Move the nozzle to the inspection position 
+2. Manually validate your Inspect X Y Z coordinates when you are happy (make sure to have no or little things that can reflect light in that area.
+3. Capture an image from the camera.
+4. Crop the configured ROI around tip of nozzle.
+5. Detect filament blobs using OpenCV.
+6. If a blob is detected:
    - Run the cleaning routine.
    - Inspect again.
-6. Continue printing when the nozzle is clean.
+7. Continue printing when the nozzle is clean.
 
 ---
 
