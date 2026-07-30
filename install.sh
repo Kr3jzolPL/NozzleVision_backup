@@ -100,6 +100,7 @@ echo "    ~/NozzleVision/run.sh"
 echo ""
 echo "API:"
 echo "Restarting Moonraker..."
-chmod +x install.sh
+
 sudo systemctl restart moonraker || true
+
 echo "    http://$(hostname -I | awk '{print $1}'):5050/check"
