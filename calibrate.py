@@ -1,36 +1,72 @@
 import json
-import cv2
 
-from nozzlevision.camera import capture
+CONFIG = "config.json"
 
-with open("config.json", "r") as f:
-    config = json.load(f)
+STEP = 5
 
-roi = config["roi"]
+
+def load():
+    with open(CONFIG, "r") as f:
+        return json.load(f)
+
+
+def save(cfg):
+    with open(CONFIG, "w") as f:
+        json.dump(cfg, f, indent=4)
+
+
+cfg = load()
+roi = cfg["roi"]
+
+print("==============================")
+print(" NozzleVision ROI Calibration")
+print("==============================")
+print("")
+print("W A S D : Move ROI")
+print("I K     : Height +/-")
+print("J L     : Width +/-")
+print("P       : Save")
+print("Q       : Quit")
+print("")
 
 while True:
 
-    frame = capture()
-
-    if frame is None:
-        continue
-
-    cv2.rectangle(
-        frame,
-        (roi["x"], roi["y"]),
-        (
-            roi["x"] + roi["width"],
-            roi["y"] + roi["height"]
-        ),
-        (0, 255, 0),
-        2
+    print(
+        f"X:{roi['x']}  "
+        f"Y:{roi['y']}  "
+        f"W:{roi['width']}  "
+        f"H:{roi['height']}"
     )
 
-    cv2.imshow("NozzleVision Calibration", frame)
+    key = input("> ").lower()
 
-    key = cv2.waitKey(1)
+    if key == "w":
+        roi["y"] -= STEP
 
-    if key == ord("q"):
+    elif key == "s":
+        roi["y"] += STEP
+
+    elif key == "a":
+        roi["x"] -= STEP
+
+    elif key == "d":
+        roi["x"] += STEP
+
+    elif key == "i":
+        roi["height"] += STEP
+
+    elif key == "k":
+        roi["height"] = max(10, roi["height"] - STEP)
+
+    elif key == "l":
+        roi["width"] += STEP
+
+    elif key == "j":
+        roi["width"] = max(10, roi["width"] - STEP)
+
+    elif key == "p":
+        save(cfg)
+        print("ROI saved.")
+
+    elif key == "q":
         break
-
-cv2.destroyAllWindows()
