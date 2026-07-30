@@ -3,7 +3,7 @@
   "inspect_y": 343,
   "inspect_z": 18,
 
-  "camera_url": "http://127.0.0.1/webcam/?action=snapshot",
+  "camera_url": "http://192.168.1.117:8080/?action=snapshot"
 
   "roi": {
     "x": 560,
